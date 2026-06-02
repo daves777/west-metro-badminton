@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>West Metro Badminton</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue:        #2b6fd4;
+    --blue-bright: #3b7fe6;
+    --blue-dark:   #1a4fa0;
+    --blue-tint:   #eaf0fb;
+    --blue-mid:    #d0e0f8;
+    --black:       #0d0e10;
+    --ink:         #111318;
+    --gray-900:    #1a1d24;
+    --gray-800:    #252932;
+    --gray-700:    #363c4a;
+    --gray-500:    #5e6679;
+    --gray-400:    #8a92a3;
+    --gray-200:    #d8dce6;
+    --gray-100:    #eceef4;
+    --gray-50:     #f5f6fa;
+    --white:       #ffffff;
+    --nav-h:       70px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: var(--white);
+    color: var(--ink);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    height: var(--nav-h);
+    background: rgba(255,255,255,0.97);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--gray-100);
+    display: flex; align-items: center; padding: 0 24px;
+    transition: box-shadow 0.3s;
+  }
+  nav.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,0.09); }
+
+  .nav-inner {
+    max-width: 1140px; margin: 0 auto; width: 100%;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .nav-logo {
+    display: flex; align-items: center; gap: 11px;
+    text-decoration: none; color: var(--ink); flex-shrink: 0;
+  }
+  .nav-logo-wordmark { line-height: 1.1; }
+  .nav-logo-top {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800; font-size: 14px;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--ink);
+  }
+  .nav-logo-bot {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700; font-size: 11px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--blue);
+  }
+
+  .nav-links { display: flex; align-items: center; gap: 2px; list-style: none; }
+  .nav-links a {
+    text-decoration: none; color: var(--gray-500);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 7px 11px; border-radius: 7px; transition: all 0.18s;
+  }
+  .nav-links a:hover { color: var(--ink); background: var(--gray-50); }
+  .nav-links a.active { color: var(--blue); }
+  .nav-cta {
+    background: var(--blue) !important; color: var(--white) !important;
+    padding: 8px 16px !important; border-radius: 8px !important;
+  }
+  .nav-cta:hover { background: var(--blue-dark) !important; }
+
+  .hamburger {
+    display: none; flex-direction: column; gap: 5px;
+    background: none; border: none; cursor: pointer; padding: 4px;
+  }
+  .hamburger span { display: block; width: 22px; height: 2px; background: var(--ink); border-radius: 2px; }
+
+  .mobile-menu {
+    display: none; position: fixed; top: var(--nav-h); left: 0; right: 0;
+    background: var(--white); border-bottom: 1px solid var(--gray-100);
+    padding: 16px; z-index: 99; flex-direction: column; gap: 4px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    text-decoration: none; color: var(--gray-700);
+    font-size: 13px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
+    padding: 12px 16px; border-radius: 8px;
+  }
+  .mobile-menu a:hover { background: var(--gray-50); }
+  .mobile-menu .mob-cta { background: var(--blue); color: var(--white) !important; text-align: center; margin-top: 6px; border-radius: 8px; }
+
+  /* ─── PAGES ─── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ─── WM LOGO SVG ─── */
+  /* Recreated as inline SVG: W (black outer strokes) + blue inner V + half-circle shuttlecock base */
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    background: var(--black);
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: calc(var(--nav-h) + 72px) 24px 100px;
+  }
+
+  .hero-glow {
+    position: absolute; top: -180px; left: -180px; width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(43,111,212,0.22) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .hero-glow-r {
+    position: absolute; bottom: -250px; right: -150px; width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(43,111,212,0.12) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .hero-court-bg {
+    position: absolute; inset: 0; pointer-events: none; opacity: 0.045;
+  }
+  .hero-court-bg svg { width: 100%; height: 100%; }
+
+  /* Large WM watermark */
+  .hero-wm-bg {
+    position: absolute; right: -60px; top: 50%; transform: translateY(-50%);
+    opacity: 0.04; pointer-events: none;
+  }
+
+  .hero-inner { max-width: 720px; margin: 0 auto; position: relative; z-index: 1; }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(43,111,212,0.15); border: 1px solid rgba(43,111,212,0.35);
+    color: var(--blue-bright);
+    font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+    padding: 7px 16px; border-radius: 4px; margin-bottom: 36px;
+  }
+  .hero-badge::before { content: '●'; color: #22e87a; font-size: 7px; }
+
+  .hero h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-size: clamp(44px, 9vw, 92px);
+    color: var(--white);
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .hero h1 .blue { color: var(--blue-bright); }
+
+  .hero-subtitle {
+    font-size: clamp(13px, 2vw, 17px);
+    font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase;
+    color: rgba(255,255,255,0.3); margin-bottom: 28px;
+  }
+
+  .hero-desc {
+    font-size: 16px; color: rgba(255,255,255,0.58);
+    max-width: 500px; margin-bottom: 44px;
+    font-weight: 500; line-height: 1.75;
+  }
+
+  .hero-btns { display: flex; flex-wrap: wrap; gap: 12px; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 26px; border-radius: 8px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    cursor: pointer; border: none; text-decoration: none; transition: all 0.2s;
+  }
+  .btn-blue { background: var(--blue); color: var(--white); }
+  .btn-blue:hover { background: var(--blue-bright); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(43,111,212,0.45); }
+  .btn-white-outline { background: transparent; color: var(--white); border: 1.5px solid rgba(255,255,255,0.25); }
+  .btn-white-outline:hover { border-color: rgba(255,255,255,0.55); background: rgba(255,255,255,0.07); transform: translateY(-2px); }
+  .btn-light { background: var(--gray-100); color: var(--ink); }
+  .btn-light:hover { background: var(--gray-200); transform: translateY(-1px); }
+  .btn-dark { background: var(--gray-800); color: var(--white); }
+  .btn-dark:hover { background: var(--gray-700); transform: translateY(-1px); }
+
+  .hero-rule { height: 1px; background: rgba(255,255,255,0.08); margin: 52px 0 40px; }
+
+  .hero-stats { display: flex; flex-wrap: wrap; gap: 44px; }
+  .stat-num {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 34px; font-weight: 900; color: var(--blue-bright); line-height: 1;
+  }
+  .stat-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.38); margin-top: 5px; }
+
+  /* ─── SECTIONS ─── */
+  section { padding: 88px 24px; }
+  .section-inner { max-width: 1140px; margin: 0 auto; }
+
+  .section-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase;
+    color: var(--blue); margin-bottom: 14px;
+  }
+  .section-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900; font-size: clamp(28px, 4.5vw, 48px);
+    line-height: 1.06; letter-spacing: -0.01em; text-transform: uppercase;
+    color: var(--ink); margin-bottom: 18px;
+  }
+  .section-body { font-size: 16px; color: var(--gray-500); max-width: 560px; line-height: 1.8; font-weight: 500; }
+
+  /* ─── CARDS ─── */
+  .cards-grid { display: grid; gap: 16px; margin-top: 52px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+
+  .card {
+    background: var(--white); border: 1.5px solid var(--gray-100);
+    border-radius: 14px; padding: 28px 26px; transition: all 0.22s; position: relative; overflow: hidden;
+  }
+  .card:hover { border-color: var(--blue-mid); box-shadow: 0 10px 36px rgba(43,111,212,0.1); transform: translateY(-3px); }
+  .card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--blue); transform: scaleX(0); transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .card:hover::before { transform: scaleX(1); }
+
+  .card-icon {
+    width: 46px; height: 46px; border-radius: 10px;
+    background: var(--blue-tint); color: var(--blue);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; margin-bottom: 18px;
+  }
+  .card h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800; font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--ink); margin-bottom: 10px;
+  }
+  .card p { font-size: 14px; color: var(--gray-500); line-height: 1.75; font-weight: 500; }
+
+  /* ─── DARK CARDS ─── */
+  .dark-card { background: var(--gray-900); border-color: rgba(255,255,255,0.07); }
+  .dark-card h3 { color: var(--white); }
+  .dark-card p { color: rgba(255,255,255,0.5); }
+  .dark-card .card-icon { background: rgba(43,111,212,0.18); }
+
+  /* ─── SPLIT ─── */
+  .info-split { display: grid; gap: 64px; align-items: center; grid-template-columns: 1fr 1fr; margin-top: 56px; }
+  @media (max-width: 740px) { .info-split { grid-template-columns: 1fr; gap: 40px; } }
+
+  .info-panel {
+    background: var(--black); border-radius: 18px; padding: 48px 40px;
+    position: relative; overflow: hidden; min-height: 280px; display: flex; align-items: center;
+  }
+  .info-panel-glow {
+    position: absolute; top: -80px; left: -80px; width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(43,111,212,0.25) 0%, transparent 70%); pointer-events: none;
+  }
+  .info-panel-content { position: relative; z-index: 1; }
+  .info-panel h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900; font-size: 22px; text-transform: uppercase; letter-spacing: 0.02em;
+    color: var(--white); margin-bottom: 14px;
+  }
+  .info-panel p { font-size: 15px; color: rgba(255,255,255,0.55); line-height: 1.8; font-weight: 500; }
+
+  .arrow-list { list-style: none; margin-top: 28px; display: flex; flex-direction: column; gap: 13px; }
+  .arrow-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 15px; color: var(--gray-600); line-height: 1.65; font-weight: 500; }
+  .arrow-list li::before { content: '→'; color: var(--blue); font-weight: 800; font-size: 13px; flex-shrink: 0; margin-top: 2px; }
+
+  /* ─── BLUE BAND ─── */
+  .blue-band { background: var(--blue); padding: 88px 24px; position: relative; overflow: hidden; }
+  .blue-band::before {
+    content: ''; position: absolute; top: -120px; right: -120px; width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(255,255,255,0.13) 0%, transparent 65%); pointer-events: none;
+  }
+  .blue-band .section-inner { text-align: center; position: relative; z-index: 1; }
+  .blue-band .section-title { color: var(--white); }
+  .blue-band .section-body { color: rgba(255,255,255,0.78); margin: 0 auto 36px; }
+  .blue-band .section-label { color: rgba(255,255,255,0.5); }
+  .btn-white { background: var(--white); color: var(--blue); }
+  .btn-white:hover { background: var(--gray-100); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.15); }
+
+  /* ─── SCHEDULE ─── */
+  .sched-grid { display: grid; gap: 16px; margin-top: 44px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+  .sched-card {
+    background: var(--white); border: 1.5px solid var(--gray-100);
+    border-radius: 12px; padding: 24px; transition: all 0.2s;
+  }
+  .sched-card:hover { border-color: var(--blue-mid); box-shadow: 0 6px 24px rgba(43,111,212,0.09); }
+  .sched-day { font-size: 10px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--blue); margin-bottom: 8px; }
+  .sched-title { font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.03em; color: var(--ink); margin-bottom: 6px; }
+  .sched-time { font-size: 14px; color: var(--gray-500); font-weight: 500; margin-bottom: 16px; }
+  .sched-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    display: inline-block; padding: 4px 11px; border-radius: 4px;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .tag-blue { background: var(--blue-tint); color: var(--blue); }
+  .tag-gray { background: var(--gray-100); color: var(--gray-500); }
+  .tag-green { background: #e6f7ee; color: #177a42; }
+  .tag-orange { background: #fff3e0; color: #b85c00; }
+
+  .sched-note {
+    background: var(--blue-tint); border: 1px solid var(--blue-mid);
+    border-radius: 10px; padding: 20px 24px; margin-top: 28px;
+    display: flex; align-items: flex-start; gap: 12px;
+    font-size: 14px; color: var(--blue-dark); line-height: 1.7; font-weight: 500;
+  }
+
+  /* ─── RULES ─── */
+  .rules-grid { display: grid; gap: 18px; margin-top: 44px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .rule-block { border: 1.5px solid var(--gray-100); border-radius: 12px; padding: 26px; background: var(--white); }
+  .rule-block h3 {
+    font-size: 13px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;
+    margin-bottom: 14px; display: flex; align-items: center; gap: 8px; color: var(--ink);
+  }
+  .rule-list { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+  .rule-list li { font-size: 13px; color: var(--gray-500); padding-left: 14px; position: relative; line-height: 1.65; font-weight: 500; }
+  .rule-list li::before { content: '—'; position: absolute; left: 0; color: var(--blue); font-size: 11px; top: 3px; font-weight: 700; }
+
+  .waiver-cta {
+    background: var(--black); border-radius: 18px; padding: 52px 40px; margin-top: 44px;
+    text-align: center; position: relative; overflow: hidden;
+  }
+  .waiver-cta::before {
+    content: ''; position: absolute; bottom: -80px; left: 50%; transform: translateX(-50%);
+    width: 400px; height: 300px;
+    background: radial-gradient(circle, rgba(43,111,212,0.22) 0%, transparent 70%); pointer-events: none;
+  }
+  .waiver-cta > * { position: relative; z-index: 1; }
+  .waiver-cta h3 { font-size: 22px; font-weight: 900; letter-spacing: 0.03em; text-transform: uppercase; color: var(--white); margin-bottom: 10px; }
+  .waiver-cta p { color: rgba(255,255,255,0.5); font-size: 15px; margin-bottom: 28px; max-width: 460px; margin-left: auto; margin-right: auto; font-weight: 500; }
+
+  /* ─── FAQ ─── */
+  .faq-list { margin-top: 44px; display: flex; flex-direction: column; gap: 10px; max-width: 800px; }
+  .faq-item { border: 1.5px solid var(--gray-100); border-radius: 10px; overflow: hidden; transition: border-color 0.2s; }
+  .faq-item.open { border-color: var(--blue-mid); }
+  .faq-q {
+    padding: 20px 24px; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+    background: var(--white); user-select: none; color: var(--ink);
+  }
+  .faq-q:hover { background: var(--gray-50); }
+  .faq-arrow { transition: transform 0.25s; color: var(--blue); font-size: 14px; flex-shrink: 0; }
+  .faq-item.open .faq-arrow { transform: rotate(180deg); }
+  .faq-a { display: none; padding: 0 24px 20px; font-size: 14px; color: var(--gray-500); line-height: 1.8; border-top: 1px solid var(--gray-100); font-weight: 500; }
+  .faq-item.open .faq-a { display: block; padding-top: 16px; }
+
+  /* ─── CONTACT ─── */
+  .contact-grid { display: grid; gap: 16px; margin-top: 44px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .contact-card {
+    background: var(--gray-50); border: 1.5px solid var(--gray-100);
+    border-radius: 14px; padding: 32px 26px; text-align: center; transition: all 0.2s;
+  }
+  .contact-card:hover { background: var(--blue-tint); border-color: var(--blue-mid); transform: translateY(-3px); }
+  .contact-icon { font-size: 30px; margin-bottom: 14px; }
+  .contact-card h3 { font-size: 13px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; color: var(--ink); }
+  .contact-card p { font-size: 13px; color: var(--gray-500); margin-bottom: 16px; line-height: 1.7; font-weight: 500; }
+  .contact-link { color: var(--blue); font-size: 13px; font-weight: 700; text-decoration: none; }
+  .contact-link:hover { text-decoration: underline; }
+
+  .update-box { background: var(--black); border-radius: 16px; padding: 48px 40px; margin-top: 40px; position: relative; overflow: hidden; }
+  .update-box::before { content: ''; position: absolute; top: -60px; left: -60px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(43,111,212,0.22) 0%, transparent 70%); pointer-events: none; }
+  .update-box > * { position: relative; z-index: 1; }
+  .update-box h3 { font-size: 20px; font-weight: 900; letter-spacing: 0.03em; text-transform: uppercase; color: var(--white); margin-bottom: 10px; }
+  .update-box p { color: rgba(255,255,255,0.5); font-size: 14px; margin-bottom: 24px; max-width: 460px; line-height: 1.8; font-weight: 500; }
+  .update-row { display: flex; gap: 10px; flex-wrap: wrap; max-width: 460px; }
+  .update-input {
+    flex: 1; min-width: 180px; padding: 12px 16px; border-radius: 8px;
+    border: 1.5px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.07);
+    color: var(--white); font-size: 13px; font-family: 'Montserrat', sans-serif; font-weight: 500; outline: none;
+  }
+  .update-input::placeholder { color: rgba(255,255,255,0.3); }
+  .update-input:focus { border-color: var(--blue); }
+
+  /* ─── FOOTER ─── */
+  footer { background: var(--black); color: rgba(255,255,255,0.4); padding: 60px 24px 32px; border-top: 1px solid rgba(255,255,255,0.06); }
+  .footer-inner { max-width: 1140px; margin: 0 auto; }
+  .footer-top { display: flex; flex-wrap: wrap; gap: 48px; justify-content: space-between; margin-bottom: 48px; }
+  .footer-brand { max-width: 260px; }
+  .footer-wm { margin-bottom: 14px; }
+  .footer-brand-name { font-size: 13px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--white); }
+  .footer-brand-sub { font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--blue); }
+  .footer-brand p { font-size: 13px; line-height: 1.8; margin-top: 10px; font-weight: 500; }
+  .footer-links h4 { font-size: 10px; font-weight: 700; color: var(--white); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 14px; }
+  .footer-links ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+  .footer-links a { color: rgba(255,255,255,0.38); font-size: 13px; text-decoration: none; cursor: pointer; transition: color 0.15s; font-weight: 500; }
+  .footer-links a:hover { color: var(--white); }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.07); padding-top: 24px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; font-size: 12px; font-weight: 500; }
+  .footer-disc { color: rgba(255,255,255,0.22); font-size: 11px; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 780px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    section { padding: 64px 20px; }
+    .hero { padding: calc(var(--nav-h) + 44px) 20px 72px; }
+    .blue-band { padding: 64px 20px; }
+  }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: translateY(0); } }
+  .hero-badge    { animation: fadeUp 0.5s 0.05s ease both; }
+  .hero h1       { animation: fadeUp 0.55s 0.12s ease both; }
+  .hero-subtitle { animation: fadeUp 0.55s 0.18s ease both; }
+  .hero-desc     { animation: fadeUp 0.55s 0.24s ease both; }
+  .hero-btns     { animation: fadeUp 0.55s 0.30s ease both; }
+  .hero-stats    { animation: fadeUp 0.55s 0.38s ease both; }
+</style>
+</head>
+<body>
+
+<!-- ─── WM LOGO DEFINITION (reusable inline SVG) ─── -->
+<!-- The mark: W outer (black two diagonal strokes) + M right (black) + blue inner V + shuttlecock half-circle base -->
+
+<!-- NAV -->
+<nav id="mainNav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="#" onclick="showPage('home')">
+      <!-- WM monogram - compact version for nav -->
+      <svg width="42" height="36" viewBox="0 0 210 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- W left stroke (black) -->
+        <polygon points="0,0 28,0 75,120 55,120" fill="#111318"/>
+        <!-- W right outer stroke (black) -->
+        <polygon points="95,120 115,120 160,0 188,0 110,180 75,180" fill="#111318" opacity="0"/>
+        <!-- Blue inner V -->
+        <polygon points="55,0 80,0 105,65 130,0 155,0 105,100 55,0" fill="#2b6fd4"/>
+        <!-- Shuttlecock half circle base -->
+        <path d="M75 120 Q105 155 135 120 L120 120 Q105 140 90 120 Z" fill="#111318"/>
+        <!-- M right side (black) -->
+        <polygon points="130,0 158,0 210,120 185,120" fill="#111318"/>
+        <polygon points="155,0 210,0 210,120 185,120" fill="#111318"/>
+        <!-- Inner M stroke -->
+        <polygon points="155,0 175,0 210,90 210,120 185,80" fill="#111318"/>
+      </svg>
+      <div class="nav-logo-wordmark">
+        <div class="nav-logo-top">West Metro</div>
+        <div class="nav-logo-bot">Badminton</div>
+      </div>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#" onclick="showPage('home')" class="nav-link active" data-page="home">Home</a></li>
+      <li><a href="#" onclick="showPage('schedule')" class="nav-link" data-page="schedule">Schedule</a></li>
+      <li><a href="#" onclick="showPage('opengym')" class="nav-link" data-page="opengym">Open Gym</a></li>
+      <li><a href="#" onclick="showPage('training')" class="nav-link" data-page="training">Training</a></li>
+      <li><a href="#" onclick="showPage('rules')" class="nav-link" data-page="rules">Rules & Waiver</a></li>
+      <li><a href="#" onclick="showPage('faq')" class="nav-link" data-page="faq">FAQ</a></li>
+      <li><a href="#" onclick="showPage('contact')" class="nav-link nav-cta" data-page="contact">Contact</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#" onclick="showPage('home');toggleMenu()">Home</a>
+  <a href="#" onclick="showPage('schedule');toggleMenu()">Schedule</a>
+  <a href="#" onclick="showPage('opengym');toggleMenu()">Open Gym</a>
+  <a href="#" onclick="showPage('training');toggleMenu()">Training</a>
+  <a href="#" onclick="showPage('rules');toggleMenu()">Rules & Waiver</a>
+  <a href="#" onclick="showPage('faq');toggleMenu()">FAQ</a>
+  <a href="#" onclick="showPage('contact');toggleMenu()" class="mob-cta">Contact</a>
+</div>
+
+<!-- ══════════════ HOME ══════════════ -->
+<div class="page active" id="page-home">
+
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-glow-r"></div>
+    <div class="hero-court-bg">
+      <svg viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice" fill="none">
+        <rect x="100" y="80" width="1000" height="540" stroke="white" stroke-width="3"/>
+        <line x1="600" y1="80" x2="600" y2="620" stroke="white" stroke-width="3"/>
+        <line x1="100" y1="215" x2="1100" y2="215" stroke="white" stroke-width="2"/>
+        <line x1="100" y1="485" x2="1100" y2="485" stroke="white" stroke-width="2"/>
+        <line x1="232" y1="215" x2="232" y2="485" stroke="white" stroke-width="2"/>
+        <line x1="968" y1="215" x2="968" y2="485" stroke="white" stroke-width="2"/>
+        <line x1="100" y1="147" x2="1100" y2="147" stroke="white" stroke-width="1.5" stroke-dasharray="6,4"/>
+        <line x1="100" y1="553" x2="1100" y2="553" stroke="white" stroke-width="1.5" stroke-dasharray="6,4"/>
+        <line x1="168" y1="80" x2="168" y2="620" stroke="white" stroke-width="1.5" stroke-dasharray="6,4"/>
+        <line x1="1032" y1="80" x2="1032" y2="620" stroke="white" stroke-width="1.5" stroke-dasharray="6,4"/>
+        <line x1="600" y1="215" x2="600" y2="485" stroke="white" stroke-width="2"/>
+      </svg>
+    </div>
+    <!-- Large WM watermark bg -->
+    <div class="hero-wm-bg">
+      <svg width="520" height="440" viewBox="0 0 260 220" fill="none">
+        <polygon points="0,0 35,0 95,150 70,150" fill="white"/>
+        <polygon points="70,150 95,150 130,60 165,150 190,150 130,220 70,150" fill="white"/>
+        <polygon points="165,0 200,0 260,150 235,150" fill="white"/>
+        <polygon points="195,0 260,0 260,150 235,150" fill="white"/>
+        <!-- Blue inner V accent -->
+        <polygon points="70,0 100,0 130,80 160,0 190,0 130,125 70,0" fill="#2b6fd4"/>
+        <!-- Half circle -->
+        <path d="M90 150 Q130 195 170 150 L155 150 Q130 178 105 150 Z" fill="white"/>
+      </svg>
+    </div>
+
+    <div class="hero-inner">
+      <div class="hero-badge">Wayzata High School · West Metro, MN</div>
+      <h1>West Metro<br><span class="blue">Badminton</span></h1>
+      <div class="hero-subtitle">Community Open Gym & Training</div>
+      <p class="hero-desc">Drop-in open play and structured coaching for all skill levels — from first-timers to competitive players. Show up, rally, improve, repeat.</p>
+      <div class="hero-btns">
+        <a class="btn btn-blue" href="#" onclick="showPage('schedule')">View Schedule</a>
+        <a class="btn btn-white-outline" href="#" onclick="showPage('rules')">Complete Waiver</a>
+        <a class="btn btn-white-outline" href="#" onclick="showPage('training')">About Training</a>
+      </div>
+      <div class="hero-rule"></div>
+      <div class="hero-stats">
+        <div><div class="stat-num">4+</div><div class="stat-label">Courts Available</div></div>
+        <div><div class="stat-num">All</div><div class="stat-label">Skill Levels Welcome</div></div>
+        <div><div class="stat-num">Weekly</div><div class="stat-label">Open Gym Sessions</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section style="background: var(--gray-50);">
+    <div class="section-inner">
+      <div class="section-label">About the Program</div>
+      <h2 class="section-title">Badminton for everyone,<br>right here in the west metro</h2>
+      <p class="section-body">West Metro Badminton is an independently organized community program — not a school activity. We rent gym space at Wayzata High School and run it ourselves, for the community.</p>
+      <div class="cards-grid">
+        <div class="card"><div class="card-icon">🏸</div><h3>Open Play</h3><p>Drop in any session for casual rotating court play. No registration, no commitment — just show up and get on the court.</p></div>
+        <div class="card"><div class="card-icon">🎯</div><h3>Structured Coaching</h3><p>Dedicated training courts with focused drills, technique work, and personalized feedback from experienced coaches.</p></div>
+        <div class="card"><div class="card-icon">📈</div><h3>Skill Development</h3><p>First-timer or competitive-level player — we have a track for every skill level and a structure to help you improve.</p></div>
+        <div class="card"><div class="card-icon">🤝</div><h3>Community</h3><p>We're building a vibrant local badminton community where friendships, rivalries, and real growth happen together.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section>
+    <div class="section-inner">
+      <div class="info-split">
+        <div>
+          <div class="section-label">How It Works</div>
+          <h2 class="section-title">A hybrid format built for community play</h2>
+          <p class="section-body">Every session runs a two-track format that serves casual players and serious athletes side by side.</p>
+          <ul class="arrow-list">
+            <li>Open gym courts for drop-in rotating casual play — no commitment required</li>
+            <li>Dedicated training courts with structured coaching, drills, and strategy work</li>
+            <li>Flexible — open gym one week, training the next, your choice</li>
+            <li>Equipment provided; bring non-marking shoes</li>
+            <li>Welcoming to beginners — we'll get you started day one</li>
+          </ul>
+          <div style="margin-top: 28px; display: flex; gap: 12px; flex-wrap: wrap;">
+            <a class="btn btn-blue" href="#" onclick="showPage('opengym')">Open Gym Details</a>
+            <a class="btn btn-light" href="#" onclick="showPage('training')">Training Info</a>
+          </div>
+        </div>
+        <div class="info-panel">
+          <div class="info-panel-glow"></div>
+          <div class="info-panel-content">
+            <!-- WM mark in panel -->
+            <svg width="48" height="40" viewBox="0 0 260 220" fill="none" style="margin-bottom:18px;opacity:0.9">
+              <polygon points="0,0 35,0 95,150 70,150" fill="white"/>
+              <polygon points="70,150 95,150 130,60 165,150 190,150 130,220 70,150" fill="white" opacity="0"/>
+              <polygon points="165,0 200,0 260,150 235,150" fill="white"/>
+              <polygon points="195,0 260,0 260,150 235,150" fill="white"/>
+              <polygon points="70,0 100,0 130,80 160,0 190,0 130,125 70,0" fill="#2b6fd4"/>
+              <path d="M90 150 Q130 195 170 150 L155 150 Q130 178 105 150 Z" fill="white"/>
+            </svg>
+            <h3>Play Your Way</h3>
+            <p>Open gym and training run simultaneously in the same space — flex between casual play and structured improvement any session, any week.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BLUE CTA -->
+  <div class="blue-band">
+    <div class="section-inner">
+      <div class="section-label">Ready to play?</div>
+      <h2 class="section-title">Come swing —<br>your first session is just a waiver away</h2>
+      <p class="section-body">No experience needed. Wear non-marking shoes and we'll handle the rest.</p>
+      <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+        <a class="btn btn-white" href="#" onclick="showPage('schedule')">See the Schedule</a>
+        <a class="btn btn-white-outline" href="#" onclick="showPage('faq')">Read the FAQ</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════ SCHEDULE ══════════════ -->
+<div class="page" id="page-schedule">
+  <section style="padding-top: calc(var(--nav-h) + 56px); background: var(--gray-50); min-height: 100vh;">
+    <div class="section-inner">
+      <div class="section-label">Sessions</div>
+      <h1 class="section-title">Program Schedule</h1>
+      <p class="section-body">All sessions held at <strong>Wayzata High School</strong>, Plymouth, MN. Subject to change — follow us for real-time updates.</p>
+      <div class="sched-grid">
+        <div class="sched-card"><div class="sched-day">Monday</div><div class="sched-title">Open Gym</div><div class="sched-time">⏰ 7:00 PM – 9:30 PM</div><div class="sched-tags"><span class="tag tag-blue">Open Gym</span><span class="tag tag-green">All Levels</span></div></div>
+        <div class="sched-card"><div class="sched-day">Wednesday</div><div class="sched-title">Open Gym + Training</div><div class="sched-time">⏰ 6:30 PM – 9:30 PM</div><div class="sched-tags"><span class="tag tag-blue">Open Gym</span><span class="tag tag-orange">Training</span><span class="tag tag-green">All Levels</span></div></div>
+        <div class="sched-card"><div class="sched-day">Friday</div><div class="sched-title">Open Gym</div><div class="sched-time">⏰ 7:00 PM – 9:30 PM</div><div class="sched-tags"><span class="tag tag-blue">Open Gym</span><span class="tag tag-green">All Levels</span></div></div>
+        <div class="sched-card"><div class="sched-day">Saturday</div><div class="sched-title">Morning Training</div><div class="sched-time">⏰ 9:00 AM – 12:00 PM</div><div class="sched-tags"><span class="tag tag-orange">Training Focus</span><span class="tag tag-gray">Intermediate+</span></div></div>
+        <div class="sched-card"><div class="sched-day">Saturday</div><div class="sched-title">Beginner Open Gym</div><div class="sched-time">⏰ 1:00 PM – 3:30 PM</div><div class="sched-tags"><span class="tag tag-blue">Open Gym</span><span class="tag tag-green">Beginner Friendly</span></div></div>
+        <div class="sched-card" style="background: var(--gray-100); border-style: dashed;"><div class="sched-day">Sunday</div><div class="sched-title">No Session</div><div class="sched-time">—</div><div class="sched-tags"><span class="tag tag-gray">Day Off</span></div></div>
+      </div>
+      <div class="sched-note"><span style="font-size:18px;flex-shrink:0">📌</span><div><strong>Heads up:</strong> This schedule is a placeholder and may not reflect current availability. Sessions can be cancelled due to school events. Check our social channels or contact us before heading out.</div></div>
+      <div style="margin-top:60px;">
+        <div class="section-label">Fees</div>
+        <h2 class="section-title" style="font-size: 30px;">Pricing</h2>
+        <div class="cards-grid">
+          <div class="card"><div class="card-icon">🚶</div><h3>Drop-In Open Gym</h3><p>Per-session pricing. Pay at the door or via Venmo. No advance reservation needed.</p></div>
+          <div class="card"><div class="card-icon">🎓</div><h3>Training Sessions</h3><p>Training may be priced separately. Contact us for current rates and packages.</p></div>
+          <div class="card"><div class="card-icon">👦</div><h3>Youth & Juniors</h3><p>Discounted rates available. Parental waiver required for players under 18.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════ OPEN GYM ══════════════ -->
+<div class="page" id="page-opengym">
+  <section style="padding-top: calc(var(--nav-h) + 56px); min-height: 100vh;">
+    <div class="section-inner">
+      <div class="section-label">Drop-In Play</div>
+      <h1 class="section-title">Open Gym</h1>
+      <p class="section-body">Show up, sign in, and play. No reservations, no commitments — just community badminton at its best.</p>
+      <div class="info-split">
+        <div>
+          <h2 class="section-title" style="font-size: 30px;">How It Works</h2>
+          <p style="font-size:15px;color:var(--gray-500);line-height:1.8;margin-bottom:20px;font-weight:500;">Open gym courts rotate throughout the session so everyone gets equal time on court. Arrive any time during the window.</p>
+          <ul class="arrow-list">
+            <li>Arrive any time during the session window</li>
+            <li>Check in at the door — sign waiver on first visit</li>
+            <li>Join the rotation: winners stay, losers rotate</li>
+            <li>All skill levels welcome on open gym courts</li>
+            <li>Shuttlecocks provided (feather or nylon by session)</li>
+          </ul>
+        </div>
+        <div class="info-panel">
+          <div class="info-panel-glow"></div>
+          <div class="info-panel-content">
+            <h3>Court Rotation</h3>
+            <p>Winners stay, challengers rotate in — a fair social format that keeps games moving and lets you meet every player in the room over the course of an evening.</p>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:64px;">
+        <h2 class="section-title" style="font-size:30px;">All Skill Levels</h2>
+        <div class="cards-grid" style="margin-top:28px;">
+          <div class="card"><div class="card-icon">🌱</div><h3>Beginner</h3><p>Never played? Grab a loaner racket and jump in. The crowd is friendly and patient with new players.</p></div>
+          <div class="card"><div class="card-icon">⚡</div><h3>Intermediate</h3><p>Know the basics? Open gym offers great social competition at a relaxed pace — perfect for steady improvement.</p></div>
+          <div class="card"><div class="card-icon">🏆</div><h3>Advanced</h3><p>Experienced players often use training courts but are equally welcome on open gym courts for casual matches.</p></div>
+        </div>
+      </div>
+      <div style="margin-top:64px;">
+        <h2 class="section-title" style="font-size:30px;">Check-In & Payment</h2>
+        <div class="cards-grid" style="margin-top:28px;">
+          <div class="card"><div class="card-icon">✅</div><h3>First Visit</h3><p>Complete your liability waiver (online or at the door). Sign in and pay the session fee.</p></div>
+          <div class="card"><div class="card-icon">🔁</div><h3>Return Visits</h3><p>Sign in at check-in. Cash, Venmo, or digital payment accepted. Quick every time.</p></div>
+          <div class="card"><div class="card-icon">👟</div><h3>What to Bring</h3><p>Non-marking court shoes (required), athletic wear, water bottle. Rackets and shuttles provided.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════ TRAINING ══════════════ -->
+<div class="page" id="page-training">
+  <section style="padding-top: calc(var(--nav-h) + 56px); min-height: 100vh;">
+    <div class="section-inner">
+      <div class="section-label">Level Up</div>
+      <h1 class="section-title">Training Program</h1>
+      <p class="section-body">Structured coaching on dedicated courts with experienced coaches who deliver skill-focused sessions and personalized feedback.</p>
+      <div class="cards-grid">
+        <div class="card"><div class="card-icon">🎯</div><h3>Drills & Technique</h3><p>Repetition-based drills covering clears, smashes, drops, net play, and service.</p></div>
+        <div class="card"><div class="card-icon">👣</div><h3>Footwork</h3><p>Badminton is 70% footwork. We emphasize court movement, positioning, and recovery from session one.</p></div>
+        <div class="card"><div class="card-icon">🧠</div><h3>Game Strategy</h3><p>Shot selection, rally patterns, reading opponents, and tactical play for singles and doubles.</p></div>
+        <div class="card"><div class="card-icon">💬</div><h3>Coach Feedback</h3><p>Coaches observe your form and rally, offering targeted corrections and encouragement throughout.</p></div>
+        <div class="card"><div class="card-icon">🏟️</div><h3>Dedicated Courts</h3><p>Training courts are separate from open gym — a focused space for structured improvement.</p></div>
+        <div class="card"><div class="card-icon">📅</div><h3>Progressive Curriculum</h3><p>Sessions build progressively rather than random play — each week accelerates the last.</p></div>
+      </div>
+      <div class="info-split" style="margin-top:64px;">
+        <div class="info-panel">
+          <div class="info-panel-glow"></div>
+          <div class="info-panel-content">
+            <h3>Training vs. Open Gym</h3>
+            <p>Training runs simultaneously with open gym on dedicated courts — structured activities, not pickup play. You'll always know what you're working on.</p>
+          </div>
+        </div>
+        <div>
+          <h2 class="section-title" style="font-size:30px;">Who is training for?</h2>
+          <p style="font-size:15px;color:var(--gray-500);line-height:1.8;margin-bottom:20px;font-weight:500;">Not just advanced players. We run skill-differentiated tracks so beginners and experienced athletes get equal value from the same session.</p>
+          <ul class="arrow-list">
+            <li>Beginners learning fundamentals in a low-pressure setting</li>
+            <li>Intermediate players breaking bad habits and building consistency</li>
+            <li>Advanced players sharpening tactical and competitive skills</li>
+            <li>Youth players with age-appropriate coaching and progression</li>
+          </ul>
+          <div style="margin-top:28px;"><a class="btn btn-blue" href="#" onclick="showPage('contact')">Inquire About Training</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════ RULES & WAIVER ══════════════ -->
+<div class="page" id="page-rules">
+  <section style="padding-top: calc(var(--nav-h) + 56px); min-height: 100vh;">
+    <div class="section-inner">
+      <div class="section-label">Policies</div>
+      <h1 class="section-title">Rules & Waiver</h1>
+      <p class="section-body">A few ground rules keep everyone safe, protect the facility, and ensure a great experience for the whole community.</p>
+      <div class="rules-grid">
+        <div class="rule-block"><h3><span>👟</span> Court & Equipment</h3><ul class="rule-list"><li>Non-marking athletic shoes required — no exceptions</li><li>No outdoor shoes on the court</li><li>Handle shuttlecocks and equipment with care</li><li>Do not drag rackets or throw equipment</li><li>Report damaged nets or equipment to a coordinator</li></ul></div>
+        <div class="rule-block"><h3><span>🔄</span> Court Rotation</h3><ul class="rule-list"><li>Winners stay, losers rotate — open gym standard</li><li>Games to 21 (rally scoring), cap at 30</li><li>Challengers must be waiting before game ends to rotate in</li><li>Doubles is default during busy sessions</li><li>Singles courts designated if space allows</li></ul></div>
+        <div class="rule-block"><h3><span>🤝</span> Sportsmanship</h3><ul class="rule-list"><li>Call your own faults honestly — we self-officiate</li><li>Respectful communication at all times</li><li>Encourage new players; patience with beginners expected</li><li>No excessive celebration or taunting</li><li>Disputes settled with a re-serve or replay</li></ul></div>
+        <div class="rule-block"><h3><span>🛡️</span> Safety</h3><ul class="rule-list"><li>Warm up before intense play to prevent injury</li><li>Yield to players on adjacent courts</li><li>Pick up loose shuttles from your court immediately</li><li>Minors under 18 require a signed parental waiver</li><li>Report any injuries to a session coordinator</li></ul></div>
+        <div class="rule-block"><h3><span>📋</span> Check-In</h3><ul class="rule-list"><li>All participants must sign in each session</li><li>Waiver required before first session — no exceptions</li><li>Payment collected at check-in</li><li>Guests must also complete a waiver</li></ul></div>
+        <div class="rule-block"><h3><span>🏫</span> Facility</h3><ul class="rule-list"><li>Respect the school facility — clean up after yourself</li><li>No food or colored drinks on the gym floor</li><li>Water bottles ok — keep them off the court surface</li><li>Stay in designated play areas only</li></ul></div>
+      </div>
+      <div class="waiver-cta">
+        <svg width="44" height="38" viewBox="0 0 260 220" fill="none" style="margin-bottom:16px">
+          <polygon points="0,0 35,0 95,150 70,150" fill="white" opacity="0.7"/>
+          <polygon points="165,0 200,0 260,150 235,150" fill="white" opacity="0.7"/>
+          <polygon points="195,0 260,0 260,150 235,150" fill="white" opacity="0.7"/>
+          <polygon points="70,0 100,0 130,80 160,0 190,0 130,125 70,0" fill="#2b6fd4"/>
+          <path d="M90 150 Q130 195 170 150 L155 150 Q130 178 105 150 Z" fill="white" opacity="0.7"/>
+        </svg>
+        <h3>Complete Your Liability Waiver</h3>
+        <p>All participants — including minors with parental signature — must complete a waiver before playing. Digital preferred, paper available at the door.</p>
+        <a class="btn btn-blue" href="#">Complete Waiver Online →</a>
+        <div style="margin-top:14px;font-size:12px;color:rgba(255,255,255,0.3);font-weight:600;letter-spacing:0.06em;text-transform:uppercase;">Paper waivers available at session check-in</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════ FAQ ══════════════ -->
+<div class="page" id="page-faq">
+  <section style="padding-top: calc(var(--nav-h) + 56px); background: var(--gray-50); min-height: 100vh;">
+    <div class="section-inner">
+      <div class="section-label">Questions</div>
+      <h1 class="section-title">Frequently Asked Questions</h1>
+      <p class="section-body">Everything you need to know before your first visit — or your hundredth.</p>
+      <div class="faq-list">
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">I've never played badminton. Is this for me?<span class="faq-arrow">▾</span></div><div class="faq-a">Absolutely. We welcome true beginners and actively encourage newcomers. Open gym is relaxed and social — experienced players are happy to help first-timers learn. Want a more structured intro? Let us know when you arrive.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Do I need to bring my own racket?<span class="faq-arrow">▾</span></div><div class="faq-a">Loaner rackets are available for players trying the sport for the first time. If you plan to attend regularly, we recommend investing in your own racket for comfort. We're happy to suggest options at any price point.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Who provides shuttlecocks? Can I bring my own?<span class="faq-arrow">▾</span></div><div class="faq-a">Shuttlecocks are provided at all sessions as part of your session fee. The type (feather or nylon) may vary by session. You're welcome to bring your own — just check with the coordinator about which type is being used that day.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What's the difference between open gym and training?<span class="faq-arrow">▾</span></div><div class="faq-a">Open gym is casual drop-in play with a court rotation system — think pickup basketball but badminton. Training is structured coaching with drills, technique work, and coach feedback on dedicated courts. Some sessions offer both simultaneously. Training may have a separate fee.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Can players under 18 participate?<span class="faq-arrow">▾</span></div><div class="faq-a">Yes. Youth players are welcome. Players under 18 require a parental or guardian signature on the liability waiver before participating. A parent does not need to stay during the session, but must complete the waiver. Youth-specific training is offered when demand warrants it.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Is West Metro Badminton affiliated with Wayzata High School?<span class="faq-arrow">▾</span></div><div class="faq-a">No. West Metro Badminton is an independently organized community program. We rent gym space at Wayzata High School but have no affiliation with the school's athletics department, staff, or administration. We are a separate, privately run community initiative.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What shoes do I need?<span class="faq-arrow">▾</span></div><div class="faq-a">Non-marking athletic court shoes are required — lighter-colored rubber soles that don't scuff gym floors. Most running shoes or cross-trainers work fine. Outdoor shoes, cleats, or dark-soled shoes are not permitted. This rule is strictly enforced to protect the school's gym floor.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How do I find out about cancellations or schedule changes?<span class="faq-arrow">▾</span></div><div class="faq-a">We communicate via email and social media. Follow our channels and sign up for email updates. We aim to announce cancellations at least 24 hours ahead — school event conflicts can occasionally be last-minute.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Can I come just to watch without playing?<span class="faq-arrow">▾</span></div><div class="faq-a">Of course — come check it out! Non-players are welcome to observe from the sidelines. If you decide to join mid-session, just let the coordinator know. No obligation to play if you want to watch first.</div></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════ CONTACT ══════════════ -->
+<div class="page" id="page-contact">
+  <section style="padding-top: calc(var(--nav-h) + 56px); min-height: 100vh;">
+    <div class="section-inner">
+      <div class="section-label">Get In Touch</div>
+      <h1 class="section-title">Contact Us</h1>
+      <p class="section-body">Questions about the program, sessions, pricing, or training? Drop us a line or follow along for updates.</p>
+      <div class="contact-grid">
+        <div class="contact-card"><div class="contact-icon">✉️</div><h3>Email</h3><p>Best for program questions, waiver issues, or training inquiries.</p><a class="contact-link" href="mailto:info@westmetrobadminton.com">info@westmetrobadminton.com</a></div>
+        <div class="contact-card"><div class="contact-icon">📱</div><h3>Social Media</h3><p>Follow us for session updates, cancellations, photos, and announcements.</p><a class="contact-link" href="#">@WestMetroBadminton</a></div>
+        <div class="contact-card"><div class="contact-icon">💬</div><h3>Group Chat</h3><p>Join our community group chat for real-time session updates and player discussion.</p><a class="contact-link" href="#">Request Group Invite</a></div>
+        <div class="contact-card"><div class="contact-icon">📍</div><h3>Location</h3><p>Wayzata High School gymnasium, Plymouth, MN. Entrance details via group chat.</p><a class="contact-link" href="#">Get Directions</a></div>
+      </div>
+      <div class="update-box">
+        <h3>Stay in the Loop 📬</h3>
+        <p>Sign up for session updates, schedule changes, and community announcements. We keep it relevant and low-volume.</p>
+        <div class="update-row">
+          <input type="email" class="update-input" placeholder="your@email.com">
+          <button class="btn btn-blue">Subscribe</button>
+        </div>
+      </div>
+      <div style="margin-top:44px;padding:32px;background:var(--gray-50);border-radius:14px;border:1.5px solid var(--gray-100);">
+        <div class="section-label">Affiliation Note</div>
+        <h2 class="section-title" style="font-size:26px;">Independent Community Program</h2>
+        <p style="font-size:14px;color:var(--gray-500);line-height:1.8;font-weight:500;">West Metro Badminton is not affiliated with Wayzata High School, its athletics department, or the Wayzata School District. We are an independently organized, privately run community program that rents facility space. For official school programs, contact the school directly.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-wm">
+          <svg width="44" height="38" viewBox="0 0 260 220" fill="none">
+            <polygon points="0,0 35,0 95,150 70,150" fill="white" opacity="0.8"/>
+            <polygon points="165,0 200,0 260,150 235,150" fill="white" opacity="0.8"/>
+            <polygon points="195,0 260,0 260,150 235,150" fill="white" opacity="0.8"/>
+            <polygon points="70,0 100,0 130,80 160,0 190,0 130,125 70,0" fill="#2b6fd4"/>
+            <path d="M90 150 Q130 195 170 150 L155 150 Q130 178 105 150 Z" fill="white" opacity="0.8"/>
+          </svg>
+        </div>
+        <div class="footer-brand-name">West Metro</div>
+        <div class="footer-brand-sub">Badminton</div>
+        <p>An independently organized community badminton program in the west metro area of Minnesota. All levels welcome.</p>
+      </div>
+      <div class="footer-links"><h4>Program</h4><ul><li><a onclick="showPage('opengym')">Open Gym</a></li><li><a onclick="showPage('training')">Training</a></li><li><a onclick="showPage('schedule')">Schedule</a></li></ul></div>
+      <div class="footer-links"><h4>Info</h4><ul><li><a onclick="showPage('rules')">Rules & Waiver</a></li><li><a onclick="showPage('faq')">FAQ</a></li><li><a onclick="showPage('contact')">Contact</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <div>© 2025 West Metro Badminton. Community program.</div>
+      <div class="footer-disc">Not affiliated with Wayzata High School or ISD 284.</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    document.querySelectorAll('.nav-link').forEach(a => a.classList.toggle('active', a.dataset.page === id));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('open'); }
+  window.addEventListener('scroll', () => {
+    document.getElementById('mainNav').classList.toggle('scrolled', window.scrollY > 10);
+  });
+  function toggleFaq(el) {
+    const item = el.parentElement;
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+</script>
+</body>
+</html>
