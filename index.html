@@ -108,7 +108,8 @@
 
   /* ─── CARDS ─── */
   .cards-grid { display: grid; gap: 16px; margin-top: 52px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
-  .card { background: var(--white); border: 1.5px solid var(--gray-100); border-radius: 14px; padding: 28px 26px; transition: all 0.22s; position: relative; overflow: hidden; }
+  .card { background: var(--white); border: 1.5px solid var(--gray-100); border-radius: 14px; padding: 28px 26px; transition: all 0.22s; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+  .card p { flex: 1; }
   .card:hover { border-color: var(--blue-mid); box-shadow: 0 10px 36px rgba(43,111,212,0.1); transform: translateY(-3px); }
   .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--blue); transform: scaleX(0); transform-origin: left; transition: transform 0.3s; }
   .card:hover::before { transform: scaleX(1); }
@@ -189,6 +190,19 @@
     display: flex; align-items: flex-start; gap: 12px;
     font-size: 13px; color: var(--blue-dark); line-height: 1.7; font-weight: 500;
   }
+
+  /* ─── LOCATION GUIDE ─── */
+  .location-guide { margin-top: 28px; display: grid; gap: 18px; grid-template-columns: 1.05fr 1fr; align-items: stretch; }
+  .location-card { background: var(--white); border: 1.5px solid var(--gray-100); border-radius: 14px; padding: 28px; box-shadow: 0 4px 22px rgba(0,0,0,0.04); }
+  .location-card h3 { font-size: 14px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); margin-bottom: 12px; display:flex; align-items:center; gap:8px; }
+  .location-card p { font-size: 14px; color: var(--gray-500); line-height: 1.75; font-weight: 500; margin-bottom: 14px; }
+  .arrival-steps { list-style: none; counter-reset: steps; display: flex; flex-direction: column; gap: 12px; margin-top: 14px; }
+  .arrival-steps li { counter-increment: steps; display: flex; gap: 12px; align-items: flex-start; font-size: 14px; color: var(--gray-500); line-height: 1.65; font-weight: 500; }
+  .arrival-steps li::before { content: counter(steps); width: 24px; height: 24px; border-radius: 50%; background: var(--blue-tint); color: var(--blue); display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; margin-top: 1px; }
+  .location-meta { display: grid; gap: 12px; margin-top: 16px; }
+  .location-meta div { background: var(--gray-50); border: 1px solid var(--gray-100); border-radius: 10px; padding: 14px 16px; font-size: 13px; color: var(--gray-500); line-height: 1.6; font-weight: 500; }
+  .location-meta strong { color: var(--ink); display: block; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 3px; }
+  @media (max-width: 780px) { .location-guide { grid-template-columns: 1fr; } }
 
   /* ─── RULES ─── */
   .rules-grid { display: grid; gap: 18px; margin-top: 44px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
@@ -278,21 +292,11 @@
 <nav id="mainNav">
   <div class="nav-inner">
     <a class="nav-logo" href="#" onclick="showPage('home')">
-      <svg width="42" height="36" viewBox="0 0 210 180" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <polygon points="0,0 28,0 75,120 55,120" fill="#111318"/>
-        <polygon points="165,0 200,0 260,150 235,150" fill="#111318"/>
-        <polygon points="182,0 210,0 210,120 188,120" fill="#111318"/>
-        <polygon points="55,0 80,0 105,65 130,0 155,0 105,100 55,0" fill="#2b6fd4"/>
-        <path d="M75 120 Q105 155 135 120 L120 120 Q105 140 90 120 Z" fill="#111318"/>
-        <polygon points="130,0 158,0 210,120 185,120" fill="#111318"/>
-      </svg>
-      <div class="nav-logo-wordmark">
-        <div class="nav-logo-top">West Metro</div>
-        <div class="nav-logo-bot">Badminton</div>
-      </div>
+      <img src="west_metro_badminton_logo_horizontal.svg" alt="West Metro Badminton" style="height: 50px; width: auto; object-fit: cover; object-position: center;">
     </a>
     <ul class="nav-links" id="navLinks">
       <li><a href="#" onclick="showPage('home')" class="nav-link active" data-page="home">Home</a></li>
+      <li><a href="#" onclick="showPage('about')" class="nav-link" data-page="about">About</a></li>
       <li><a href="#" onclick="showPage('schedule')" class="nav-link" data-page="schedule">Schedule</a></li>
       <li><a href="#" onclick="showPage('opengym')" class="nav-link" data-page="opengym">Open Gym</a></li>
       <li><a href="#" onclick="showPage('training')" class="nav-link" data-page="training">Training</a></li>
@@ -311,6 +315,7 @@
   <a href="#" onclick="showPage('schedule');toggleMenu()">Schedule</a>
   <a href="#" onclick="showPage('opengym');toggleMenu()">Open Gym</a>
   <a href="#" onclick="showPage('training');toggleMenu()">Training</a>
+  <a href="#" onclick="showPage('about');toggleMenu()">About</a>
   <a href="#" onclick="showPage('rules');toggleMenu()">Rules & Waiver</a>
   <a href="#" onclick="showPage('faq');toggleMenu()">FAQ</a>
   <a href="#" onclick="showPage('contact');toggleMenu()" class="mob-cta">Contact</a>
@@ -337,84 +342,28 @@
       </svg>
     </div>
     <div class="hero-wm-bg">
-      <svg width="520" height="440" viewBox="0 0 260 220" fill="none">
-        <polygon points="0,0 35,0 95,150 70,150" fill="white"/>
-        <polygon points="70,150 95,150 130,60 165,150 190,150 130,220 70,150" fill="white" opacity="0"/>
-        <polygon points="165,0 200,0 260,150 235,150" fill="white"/>
-        <polygon points="195,0 260,0 260,150 235,150" fill="white"/>
-        <polygon points="70,0 100,0 130,80 160,0 190,0 130,125 70,0" fill="#2b6fd4"/>
-        <path d="M90 150 Q130 195 170 150 L155 150 Q130 178 105 150 Z" fill="white"/>
-      </svg>
+      <img src="west_metro_badminton_logo_only.svg" alt="" style="width: 520px; height: 440px; opacity: 0.08;">
     </div>
     <div class="hero-inner">
-      <div class="hero-badge">Wayzata High School · West Metro, MN</div>
+      <div class="hero-badge">Wayzata High School · Plymouth, MN · Gyms 7 & 8</div>
       <h1>West Metro<br><span class="blue">Badminton</span></h1>
       <div class="hero-subtitle">Community Open Gym & Training</div>
       <p class="hero-desc">Drop-in open play and structured coaching for all skill levels — from first-timers to competitive players. Show up, rally, improve, repeat.</p>
       <div class="hero-btns">
         <a class="btn btn-blue" href="#" onclick="showPage('schedule')">View Schedule</a>
         <a class="btn btn-white-outline" href="#" onclick="showPage('rules')">Complete Waiver</a>
-        <a class="btn btn-white-outline" href="#" onclick="showPage('training')">About Training</a>
+        <a class="btn btn-white-outline" href="#" onclick="showPage('about')">About Us</a>
       </div>
       <div class="hero-rule"></div>
       <div class="hero-stats">
-        <div><div class="stat-num">4+</div><div class="stat-label">Courts Available</div></div>
+        <div><div class="stat-num">7+</div><div class="stat-label">Courts Available</div></div>
         <div><div class="stat-num">All</div><div class="stat-label">Skill Levels Welcome</div></div>
         <div><div class="stat-num">Weekly</div><div class="stat-label">Open Gym Sessions</div></div>
       </div>
     </div>
   </section>
 
-  <section style="background: var(--gray-50);">
-    <div class="section-inner">
-      <div class="section-label">About the Program</div>
-      <h2 class="section-title">Badminton for everyone,<br>right here in the west metro</h2>
-      <p class="section-body">West Metro Badminton is an independently organized community program — not a school activity. We rent gym space at Wayzata High School and run it ourselves, for the community.</p>
-      <div class="cards-grid">
-        <div class="card"><div class="card-icon">🏸</div><h3>Open Play</h3><p>Drop in any session for casual rotating court play. No registration, no commitment — just show up and get on the court.</p></div>
-        <div class="card"><div class="card-icon">🎯</div><h3>Structured Coaching</h3><p>Dedicated training courts with focused drills, technique work, and personalized feedback from experienced coaches.</p></div>
-        <div class="card"><div class="card-icon">📈</div><h3>Skill Development</h3><p>First-timer or competitive-level player — we have a track for every skill level and a structure to help you improve.</p></div>
-        <div class="card"><div class="card-icon">🤝</div><h3>Community</h3><p>We're building a vibrant local badminton community where friendships, rivalries, and real growth happen together.</p></div>
-      </div>
-    </div>
-  </section>
 
-  <section>
-    <div class="section-inner">
-      <div class="info-split">
-        <div>
-          <div class="section-label">How It Works</div>
-          <h2 class="section-title">A hybrid format built for community play</h2>
-          <p class="section-body">Every session runs a two-track format that serves casual players and serious athletes side by side.</p>
-          <ul class="arrow-list">
-            <li>Open gym courts for drop-in rotating casual play — no commitment required</li>
-            <li>Dedicated training courts with structured coaching, drills, and strategy work</li>
-            <li>Flexible — open gym one week, training the next, your choice</li>
-            <li>Equipment provided; bring non-marking shoes</li>
-            <li>Welcoming to beginners — we'll get you started day one</li>
-          </ul>
-          <div style="margin-top: 28px; display: flex; gap: 12px; flex-wrap: wrap;">
-            <a class="btn btn-blue" href="#" onclick="showPage('opengym')">Open Gym Details</a>
-            <a class="btn btn-light" href="#" onclick="showPage('training')">Training Info</a>
-          </div>
-        </div>
-        <div class="info-panel">
-          <div class="info-panel-glow"></div>
-          <div class="info-panel-content">
-            <svg width="48" height="40" viewBox="0 0 260 220" fill="none" style="margin-bottom:18px;opacity:0.9">
-              <polygon points="0,0 35,0 95,150 70,150" fill="white"/>
-              <polygon points="165,0 200,0 260,150 235,150" fill="white"/>
-              <polygon points="195,0 260,0 260,150 235,150" fill="white"/>
-              <polygon points="70,0 100,0 130,80 160,0 190,0 130,125 70,0" fill="#2b6fd4"/>
-              <path d="M90 150 Q130 195 170 150 L155 150 Q130 178 105 150 Z" fill="white"/>
-            </svg>
-            <h3>Play Your Way</h3>
-            <p>Open gym and training run simultaneously in the same space — flex between casual play and structured improvement any session, any week.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <div class="blue-band">
     <div class="section-inner">
@@ -427,6 +376,73 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- ══════════════ ABOUT ══════════════ -->
+<div class="page" id="page-about">
+  <section style="background: var(--gray-50); padding-top: calc(var(--nav-h) + 56px);">
+    <div class="section-inner">
+      <div class="section-label">About the Program</div>
+      <h1 class="section-title">Badminton for everyone,<br>right here in the west metro</h1>
+      <p class="section-body">West Metro Badminton is a community badminton program dedicated to providing welcoming open gym and training opportunities for players of all ages and skill levels in the west metro area. Sessions are held at Wayzata High School in Gyms 7 &amp; 8.</p>
+      <div class="cards-grid">
+        <div class="card"><div class="card-icon">📍</div><h3>Location</h3><p>Sessions take place at Wayzata High School in Gyms 7 &amp; 8. Enter through the Athletics Entrance in the back of the school.</p><div style="margin-top:16px;"><a class="btn btn-outline-blue" style="font-size:11px;padding:10px 14px;" href="#arrival-guide" onclick="showPage('schedule'); setTimeout(function() { var el = document.getElementById('arrival-guide'); var offsetTop = el.offsetTop - 120; window.scrollTo({top: offsetTop, behavior: 'smooth'}); }, 100);">View Arrival Guide →</a></div></div>
+        <div class="card"><div class="card-icon">🏸</div><h3>Open Play</h3><p>Drop in any session for casual rotating court play. No registration, no commitment — just show up and get on the court.</p><div style="margin-top:16px;"><a class="btn btn-outline-blue" style="font-size:11px;padding:10px 14px;" href="#" onclick="showPage('opengym')">View Details →</a></div></div>
+        <div class="card"><div class="card-icon">🎯</div><h3>Structured Coaching</h3><p>Dedicated training courts with focused drills, technique work, and personalized feedback from experienced coaches.</p><div style="margin-top:16px;"><a class="btn btn-outline-blue" style="font-size:11px;padding:10px 14px;" href="#" onclick="showPage('training')">Learn More →</a></div></div>
+        <div class="card"><div class="card-icon">🤝</div><h3>Community</h3><p>We're building a vibrant local badminton community where friendships, rivalries, and real growth happen together.</p><div style="margin-top:16px;"><a class="btn btn-outline-blue" style="font-size:11px;padding:10px 14px;" href="#" onclick="showPage('contact')">Get Connected →</a></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top: 0px;">
+    <div class="section-inner">
+      <div class="info-split">
+        <div>
+          <div class="section-label">How It Works</div>
+          <h2 class="section-title">A hybrid format built for community play</h2>
+          <p class="section-body">Every session runs a two-track format that serves casual players and serious athletes side by side.</p>
+          <ul class="arrow-list">
+            <li>Open gym courts for drop-in rotating casual play — no commitment required</li>
+            <li>Dedicated training courts with structured coaching, drills, and strategy work</li>
+            <li>Flexible — open gym one week, training the next, your choice</li>
+            <li>Bring your own racket, shuttles, and non-marking shoes</li>
+            <li>Welcoming to beginners — we'll get you started day one</li>
+          </ul>
+          <div style="margin-top: 28px; display: flex; gap: 12px; flex-wrap: wrap;">
+            <a class="btn btn-blue" href="#" onclick="showPage('opengym')">Open Gym Details</a>
+            <a class="btn btn-light" href="#" onclick="showPage('training')">Training Info</a>
+          </div>
+        </div>
+        <div class="info-panel">
+          <div class="info-panel-glow"></div>
+          <div class="info-panel-content">
+            <img src="west_metro_badminton_logo_only.svg" alt="" style="width: 150px; height: auto; margin-bottom:18px; opacity:0.9; object-fit: cover; object-position: center;">
+            <h3>Play Your Way</h3>
+            <p>Open gym and training run simultaneously in the same space — flex between casual play and structured improvement any session, any week.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background: var(--gray-50);">
+    <div class="section-inner">
+      <div class="section-label">About Me</div>
+      <h2 class="section-title">Coach David Lu</h2>
+      <div class="info-split" style="margin-top: 48px;">
+        <div>
+          <p class="section-body" style="margin-bottom: 20px;">Coach David Lu is the head badminton coach at Wayzata High School. He brings five years of coaching experience, including previously serving as the head coach at Tartan High School.</p>
+          <p class="section-body" style="margin-bottom: 20px;">David's badminton background includes international training experience in China and Singapore. During high school, he competed in interscholastic tournaments across Southeast Asia, representing his school in cities such as Jakarta, Bangkok, and Singapore.</p>
+          <p class="section-body">At the collegiate level, David was a member of the Penn State Collegiate Badminton Team and competed during the season in which the team won the Yonex Eastern Collegiate Team Tournament in Fall 2019.</p>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: center;">
+          <div style="width: 280px; height: 280px; background: var(--gray-200); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: var(--gray-500); font-size: 14px; text-align: center; padding: 20px;">
+            Headshot placeholder
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </div>
 
 <!-- ══════════════ SCHEDULE ══════════════ -->
@@ -469,6 +485,30 @@
         <div><strong>Heads up:</strong> Sessions may occasionally be cancelled due to school events or holidays. The calendar above reflects the most current information — add it to your Google Calendar to get updates automatically, or follow our social channels.</div>
       </div>
 
+      <div class="location-guide" id="arrival-guide">
+        <div class="location-card">
+          <h3><span>📍</span> Location &amp; Arrival Guide</h3>
+          <p><strong style="color:var(--ink);">Wayzata High School — Gyms 7 &amp; 8</strong><br>Plymouth, Minnesota</p>
+          <p>Please enter through the <strong style="color:var(--ink);">Athletics Entrance</strong> located at the back of the school.</p>
+          <div class="location-meta">
+            <div><strong>Entrance</strong>Athletics Entrance at the back of Wayzata High School</div>
+            <div><strong>Destination</strong>Gyms 7 &amp; 8</div>
+            <div><strong>Tip</strong>Follow posted signs for Gyms 7 &amp; 8 once inside.</div>
+          </div>
+        </div>
+        <div class="location-card">
+          <h3><span>➡️</span> Walking Directions</h3>
+          <ol class="arrival-steps">
+            <li>Enter through the Athletics Entrance in the back of the school.</li>
+            <li>Once inside, go right.</li>
+            <li>Walk through the cafeteria.</li>
+            <li>Take the door on the left.</li>
+            <li>Continue past the weight room.</li>
+            <li>Gyms 7 &amp; 8 will be on your right.</li>
+          </ol>
+        </div>
+      </div>
+
       <div style="margin-top: 36px; display: flex; gap: 12px; flex-wrap: wrap;">
         <a class="btn btn-blue" href="#" onclick="showPage('opengym')">Open Gym Info & Pricing</a>
         <a class="btn btn-light" href="#" onclick="showPage('training')">Training Info & Pricing</a>
@@ -479,125 +519,165 @@
 
 <!-- ══════════════ OPEN GYM ══════════════ -->
 <div class="page" id="page-opengym">
-  <section style="padding-top: calc(var(--nav-h) + 56px); min-height: 100vh;">
-    <div class="section-inner">
+  <!-- PRICING — top of page -->
+  <div class="pricing-section" style="padding-top: calc(var(--nav-h) + 56px);">
+    <div class="pricing-inner">
       <div class="section-label">Drop-In Play</div>
       <h1 class="section-title">Open Gym</h1>
-      <p class="section-body">Show up, sign in, and play. No reservations, no commitments — just community badminton at its best.</p>
+      <p class="section-body">Show up, sign in, and play. No memberships, reservations, no commitments — just community badminton at its best.</p>
+
+      <div style="margin-top:25px; text-align:left;">
+        <a class="btn btn-blue" href="#" onclick="showPage('schedule')">View Schedule</a>
+      </div>
+
+      <div class="section-inner" style="margin-top:36px;"></div>
+      <div class="pricing-cards" style="margin-top:28px;">
+        <div class="card"><div class="card-icon">💵</div><h3>Adult Open Play</h3><p style="font-size:32px;font-weight:900;color:var(--blue);line-height:1;margin-bottom:8px;">$6<span style="font-size:14px;font-weight:600;color:var(--gray-400);"> / session</span></p> <p>Paid at the door before playing — cash or digital payment accepted. No advance reservation needed.</p></div>
+        <div class="card"><div class="card-icon">👦</div><h3>Youth & Juniors</h3><p style="font-size:32px;font-weight:900;color:var(--blue);line-height:1;margin-bottom:8px;">$4<span style="font-size:14px;font-weight:600;color:var(--gray-400);"> / session</span></p> <p>For players under 18 years old. Parent/guardian waiver required prior to participation.</p></div>
+        <div class="card"><div class="card-icon">✅</div><h3>First Visit</h3><p>Complete your liability waiver before playing — available online or at the door. Then check in and pay the drop-in fee before stepping on court.</p>
+          <div style="margin-top:16px;"><a class="btn btn-outline-blue" style="font-size:11px;padding:10px 18px;" href="#" onclick="showPage('rules')">Complete Waiver</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section style="padding-top: calc(var(--nav-h) + 0px);">
+    <div class="section-inner">
+      <div style="margin-bottom:52px;">
+        <div class="section-label">How It Works</div>
+        <h2 class="section-title" style="font-size:30px;">Playing Open Gym</h2>
+        <p style="font-size:15px;color:var(--gray-500);line-height:1.8;margin-bottom:32px;font-weight:500;max-width:620px;">During busy sessions, open gym runs as doubles-only play. Form a group of 4 and join the court queue — all skill levels welcome.</p>
+        <ul class="arrow-list">
+          <li>Arrive during the session window and check in at the door</li>
+          <li>Enter through the Athletics Entrance in the back of the school and follow signs to Gyms 7 &amp; 8</li>
+          <li>Pay the drop-in fee before playing — cash or digital payment accepted</li>
+          <li>First visit? Complete the waiver before stepping on court</li>
+          <li>Form a group of 4 and join the court queue</li>
+          <li>Play best of 3 sets to 21 points, then rotate off</li>
+          <li>Training courts are reserved for training participants only</li>
+        </ul>
+      </div>
 
       <div class="info-split">
-        <div>
-          <h2 class="section-title" style="font-size: 30px;">How It Works</h2>
-          <p style="font-size:15px;color:var(--gray-500);line-height:1.8;margin-bottom:20px;font-weight:500;">Open gym courts rotate throughout the session so everyone gets equal time on court. Arrive any time during the window.</p>
-          <ul class="arrow-list">
-            <li>Arrive any time during the session window</li>
-            <li>Check in at the door — sign waiver on first visit</li>
-            <li>Join the rotation: winners stay, losers rotate</li>
-            <li>All skill levels welcome on open gym courts</li>
-            <li>Shuttlecocks provided (feather or nylon by session)</li>
-          </ul>
-        </div>
         <div class="info-panel">
           <div class="info-panel-glow"></div>
           <div class="info-panel-content">
             <h3>Court Rotation</h3>
-            <p>Winners stay, challengers rotate in — a fair social format that keeps games moving and lets you meet every player in the room over the course of an evening.</p>
+            <p>Groups of 4 form and enter the queue. After one completed match (best of 3 to 21), the group rotates off and the next group steps on. This keeps courts moving fairly for everyone.</p>
           </div>
         </div>
-      </div>
-
-      <div style="margin-top:64px;">
-        <h2 class="section-title" style="font-size:30px;">All Skill Levels</h2>
-        <div class="cards-grid" style="margin-top:28px;">
-          <div class="card"><div class="card-icon">🌱</div><h3>Beginner</h3><p>Never played? Grab a loaner racket and jump in. The crowd is friendly and patient with new players.</p></div>
-          <div class="card"><div class="card-icon">⚡</div><h3>Intermediate</h3><p>Know the basics? Open gym offers great social competition at a relaxed pace — perfect for steady improvement.</p></div>
-          <div class="card"><div class="card-icon">🏆</div><h3>Advanced</h3><p>Experienced players often use training courts but are equally welcome on open gym courts for casual matches.</p></div>
+        <div>
+          <h2 class="section-title" style="font-size:30px;">Check-In & Gear</h2>
+          <p style="font-size:15px;color:var(--gray-500);line-height:1.8;margin-bottom:20px;font-weight:500;">Everything you need to know before your first session.</p>
+          <ul class="arrow-list">
+            <li>Complete your liability waiver before playing — available online or at the door</li>
+            <li>Check in at the door and pay the drop-in fee before stepping on court</li>
+            <li>Non-marking court shoes (required), athletic wear, water bottle</li>
+            <li>Bring your own racket and shuttles — these are not provided</li>
+            <li>Cash or digital payment accepted at check-in</li>
+          </ul>
         </div>
       </div>
 
-      <div style="margin-top:64px;">
-        <h2 class="section-title" style="font-size:30px;">Check-In & Payment</h2>
-        <div class="cards-grid" style="margin-top:28px;">
-          <div class="card"><div class="card-icon">✅</div><h3>First Visit</h3><p>Complete your liability waiver (online or at the door). Sign in and pay the session fee.</p></div>
-          <div class="card"><div class="card-icon">🔁</div><h3>Return Visits</h3><p>Sign in at check-in. Cash, Venmo, or digital payment accepted. Quick every time.</p></div>
-          <div class="card"><div class="card-icon">👟</div><h3>What to Bring</h3><p>Non-marking court shoes (required), athletic wear, water bottle. Rackets and shuttles provided.</p></div>
-        </div>
+      <div style="margin-top:48px; padding:24px 28px; background:var(--blue-tint); border:1.5px solid var(--blue-mid); border-radius:12px; display:flex; align-items:flex-start; gap:14px;">
+        <span style="font-size:20px; flex-shrink:0; margin-top:2px;">ℹ️</span>
+        <p style="font-size:14px; color:var(--blue-dark); line-height:1.75; font-weight:500;"><strong>Staff discretion:</strong> Program staff may adjust court assignments, rotations, or play formats at any time to improve fairness and court usage. One or two courts will be designated for training and are not available for open gym play.</p>
       </div>
     </div>
   </section>
-
-  <!-- PRICING -->
-  <div class="pricing-section">
-    <div class="pricing-inner">
-      <div class="section-label">Fees</div>
-      <h2 class="section-title" style="font-size: 32px;">Open Gym Pricing</h2>
-      <p class="section-body">Simple drop-in pricing — no memberships or advance booking required.</p>
-      <div class="pricing-cards">
-        <div class="card"><div class="card-icon">🚶</div><h3>Drop-In Session</h3><p>Per-session pricing for casual open gym play. Pay at the door or via Venmo. No advance reservation needed.</p></div>
-        <div class="card"><div class="card-icon">👦</div><h3>Youth & Juniors</h3><p>Discounted rates available for youth players. Parental waiver required for players under 18.</p></div>
-        <div class="card"><div class="card-icon">❓</div><h3>Questions?</h3><p>Reach out via the contact page for current pricing details or if you have questions about fees.</p>
-          <div style="margin-top:16px;"><a class="btn btn-outline-blue" style="font-size:11px;padding:10px 18px;" href="#" onclick="showPage('contact')">Contact Us</a></div>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
 
 <!-- ══════════════ TRAINING ══════════════ -->
 <div class="page" id="page-training">
-  <section style="padding-top: calc(var(--nav-h) + 56px); min-height: 100vh;">
-    <div class="section-inner">
+  <!-- PRICING — top of page -->
+  <div class="pricing-section" style="padding-top: calc(var(--nav-h) + 56px);">
+    <div class="pricing-inner">
       <div class="section-label">Level Up</div>
-      <h1 class="section-title">Training Program</h1>
-      <p class="section-body">Structured coaching on dedicated courts with experienced coaches who deliver skill-focused sessions and personalized feedback.</p>
-      <div class="cards-grid">
-        <div class="card"><div class="card-icon">🎯</div><h3>Drills & Technique</h3><p>Repetition-based drills covering clears, smashes, drops, net play, and service.</p></div>
-        <div class="card"><div class="card-icon">👣</div><h3>Footwork</h3><p>Badminton is 70% footwork. We emphasize court movement, positioning, and recovery from session one.</p></div>
-        <div class="card"><div class="card-icon">🧠</div><h3>Game Strategy</h3><p>Shot selection, rally patterns, reading opponents, and tactical play for singles and doubles.</p></div>
-        <div class="card"><div class="card-icon">💬</div><h3>Coach Feedback</h3><p>Coaches observe your form and rally, offering targeted corrections and encouragement throughout.</p></div>
-        <div class="card"><div class="card-icon">🏟️</div><h3>Dedicated Courts</h3><p>Training courts are separate from open gym — a focused space for structured improvement.</p></div>
-        <div class="card"><div class="card-icon">📅</div><h3>Progressive Curriculum</h3><p>Sessions build progressively rather than random play — each week accelerates the last.</p></div>
+      <h1 class="section-title" style="font-size:clamp(28px,4.5vw,48px);">Training</h1>
+      <p class="section-body">Structured, coach-led sessions on dedicated courts — approximately one hour of focused skill development. No advance registration required; just indicate at check-in that you'd like to join training that day. Pricing is based on the total number of players who show up for training that session — the rate is set once the session begins and everyone pays the same amount at the end of their session.</p>
+
+      <div style="margin-top:25px; text-align:left;">
+        <a class="btn btn-blue" href="#" onclick="showPage('schedule')">View Schedule</a>
       </div>
 
-      <div class="info-split" style="margin-top:64px;">
+      <div class="pricing-cards" style="margin-top:28px;">
+        <div class="card" style="border-color:var(--gray-200);">
+          <div class="card-icon">👤</div>
+          <h3>Small Group</h3>
+          <p style="font-size:13px;color:var(--gray-400);font-weight:600;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:8px;">Under 5 players</p>
+          <p style="font-size:32px;font-weight:900;color:var(--blue);line-height:1;margin-bottom:8px;">$30<span style="font-size:14px;font-weight:600;color:var(--gray-400);"> / session</span></p>
+          <p style="font-size:13px;color:var(--gray-500);line-height:1.7;font-weight:500;">More direct coach attention per player in a smaller, focused setting.</p>
+        </div>
+        <div class="card" style="border-color:var(--blue-mid);box-shadow:0 4px 24px rgba(43,111,212,0.12);">
+          <div style="position:absolute;top:16px;right:16px;background:var(--blue);color:white;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:4px 10px;border-radius:4px;">Common</div>
+          <div class="card-icon">👥</div>
+          <h3>Medium Group</h3>
+          <p style="font-size:13px;color:var(--gray-400);font-weight:600;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:8px;">5–10 players</p>
+          <p style="font-size:32px;font-weight:900;color:var(--blue);line-height:1;margin-bottom:8px;">$25<span style="font-size:14px;font-weight:600;color:var(--gray-400);"> / session</span></p>
+          <p style="font-size:13px;color:var(--gray-500);line-height:1.7;font-weight:500;">A good balance of personal feedback and group drill energy.</p>
+        </div>
+        <div class="card" style="border-color:var(--gray-200);">
+          <div class="card-icon">🏟️</div>
+          <h3>Large Group</h3>
+          <p style="font-size:13px;color:var(--gray-400);font-weight:600;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:8px;">10+ players</p>
+          <p style="font-size:32px;font-weight:900;color:var(--blue);line-height:1;margin-bottom:8px;">$20<span style="font-size:14px;font-weight:600;color:var(--gray-400);"> / session</span></p>
+          <p style="font-size:13px;color:var(--gray-500);line-height:1.7;font-weight:500;">Best per-person rate when attendance is high that day.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section style="padding-top: calc(var(--nav-h) + 0px);">
+    <div class="section-inner">
+      <div style="margin-bottom:52px;">
+        <div class="section-label">What's Covered</div>
+        <h2 class="section-title" style="font-size:30px;">Session Content</h2>
+        <p style="font-size:15px;color:var(--gray-500);line-height:1.8;margin-bottom:32px;font-weight:500;max-width:620px;">Each session is approximately one hour and covers a range of structured activities designed to build real skill — not just repetition for its own sake.</p>
+        <div class="cards-grid" style="margin-top:0;">
+          <div class="card"><div class="card-icon">🎯</div><h3>Multifeed Drills</h3><p>Coach feeds multiple shuttles in sequence so you can focus purely on technique and movement without worrying about rallying.</p></div>
+          <div class="card"><div class="card-icon">🔄</div><h3>Dynamic Feed Drills</h3><p>The coach feeds and hits back, creating a live-ball scenario that builds reaction, timing, and shot consistency under realistic conditions.</p></div>
+          <div class="card"><div class="card-icon">⚡</div><h3>Dynamic Live Drills</h3><p>Structured drills between one or more live players using a single shuttle — combining technique practice with real game pressure.</p></div>
+          <div class="card"><div class="card-icon">🧠</div><h3>Supervised Play</h3><p>Play live games while the coach observes and provides real-time feedback, strategy tips, and tactical guidance during gameplay.</p></div>
+          <div class="card"><div class="card-icon">👣</div><h3>Footwork</h3><p>Court movement, positioning, split-step timing, and recovery — the foundation that makes every other skill more effective.</p></div>
+          <div class="card"><div class="card-icon">💬</div><h3>Coach Feedback</h3><p>Throughout the session, the coach identifies patterns in your play and offers targeted corrections to accelerate improvement.</p></div>
+        </div>
+      </div>
+
+      <div style="margin-top:44px; padding:28px 32px; background:var(--blue-tint); border:1.5px solid var(--blue-mid); border-radius:14px;">
+        <div style="display:flex; align-items:flex-start; gap:14px;">
+          <span style="font-size:22px; flex-shrink:0; margin-top:2px;">🎯</span>
+          <div>
+            <h3 style="font-size:14px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:var(--blue-dark); margin-bottom:10px;">Training Participants</h3>
+            <p style="font-size:14px; color:var(--blue-dark); line-height:1.8; font-weight:500;">
+              Players participating in training sessions are expected to follow coach instructions, participate safely and attentively, avoid disrupting active drills or instruction, and respect the learning opportunities of other participants. Program staff may reassign training groups or participants based on skill level, safety, attendance, or program needs.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-split">
         <div class="info-panel">
           <div class="info-panel-glow"></div>
           <div class="info-panel-content">
-            <h3>Training vs. Open Gym</h3>
-            <p>Training runs simultaneously with open gym on dedicated courts — structured activities, not pickup play. You'll always know exactly what you're working on.</p>
+            <h3>Training + Open Play</h3>
+            <p>Players who join training can also participate in open gym the same day — before or after their session — at no extra charge. Get structured coaching and casual court time in one visit.</p>
           </div>
         </div>
         <div>
-          <h2 class="section-title" style="font-size:30px;">Who is training for?</h2>
-          <p style="font-size:15px;color:var(--gray-500);line-height:1.8;margin-bottom:20px;font-weight:500;">Not just advanced players. We run skill-differentiated tracks so beginners and experienced athletes get equal value from the same session.</p>
+          <h2 class="section-title" style="font-size:30px;">How to Join</h2>
+          <p style="font-size:15px;color:var(--gray-500);line-height:1.8;margin-bottom:20px;font-weight:500;">No advance registration needed. Decide on the day and opt in when you check in at the door.</p>
           <ul class="arrow-list">
-            <li>Beginners learning fundamentals in a low-pressure setting</li>
-            <li>Intermediate players breaking bad habits and building consistency</li>
-            <li>Advanced players sharpening tactical and competitive skills</li>
-            <li>Youth players with age-appropriate coaching and progression</li>
+            <li>Show up during a session that includes training</li>
+            <li>Tell the check-in coordinator you're joining training</li>
+            <li>Complete your waiver if it's your first visit</li>
+            <li>Join the training court — sessions run approximately one hour</li>
+            <li>Payment is collected at the conclusion of your session</li>
+            <li>Stick around (or arrive early) for open gym play that day</li>
           </ul>
-          <div style="margin-top:28px;"><a class="btn btn-blue" href="#" onclick="showPage('contact')">Inquire About Training</a></div>
         </div>
       </div>
     </div>
   </section>
-
-  <!-- PRICING -->
-  <div class="pricing-section">
-    <div class="pricing-inner">
-      <div class="section-label">Fees</div>
-      <h2 class="section-title" style="font-size: 32px;">Training Pricing</h2>
-      <p class="section-body">Structured training sessions may be priced separately from open gym. Contact us for the latest rates.</p>
-      <div class="pricing-cards">
-        <div class="card"><div class="card-icon">🎓</div><h3>Training Session</h3><p>Structured coaching sessions are priced separately from open gym. Rates vary by session type and duration.</p></div>
-        <div class="card"><div class="card-icon">📦</div><h3>Packages</h3><p>Multi-session packages may be available for committed players. Contact us for current package options and pricing.</p></div>
-        <div class="card"><div class="card-icon">👦</div><h3>Youth & Juniors</h3><p>Discounted training rates available for youth players. Parental waiver required for players under 18.</p></div>
-      </div>
-      <div style="margin-top:28px;">
-        <a class="btn btn-blue" href="#" onclick="showPage('contact')">Contact Us for Pricing</a>
-      </div>
-    </div>
-  </div>
 </div>
 
 <!-- ══════════════ RULES & WAIVER ══════════════ -->
@@ -606,27 +686,51 @@
     <div class="section-inner">
       <div class="section-label">Policies</div>
       <h1 class="section-title">Rules & Waiver</h1>
-      <p class="section-body">A few ground rules keep everyone safe, protect the facility, and ensure a great experience for the whole community.</p>
+      <p class="section-body">Our goal is to provide a safe, organized, and welcoming environment for all participants. By attending West Metro Badminton, players agree to follow the expectations below.</p>
+
       <div class="rules-grid">
-        <div class="rule-block"><h3><span>👟</span> Court & Equipment</h3><ul class="rule-list"><li>Non-marking athletic shoes required — no exceptions</li><li>No outdoor shoes on the court</li><li>Handle shuttlecocks and equipment with care</li><li>Do not drag rackets or throw equipment</li><li>Report damaged nets or equipment to a coordinator</li></ul></div>
-        <div class="rule-block"><h3><span>🔄</span> Court Rotation</h3><ul class="rule-list"><li>Winners stay, losers rotate — open gym standard</li><li>Games to 21 (rally scoring), cap at 30</li><li>Challengers must be waiting before game ends to rotate in</li><li>Doubles is default during busy sessions</li><li>Singles courts designated if space allows</li></ul></div>
-        <div class="rule-block"><h3><span>🤝</span> Sportsmanship</h3><ul class="rule-list"><li>Call your own faults honestly — we self-officiate</li><li>Respectful communication at all times</li><li>Encourage new players; patience with beginners expected</li><li>No excessive celebration or taunting</li><li>Disputes settled with a re-serve or replay</li></ul></div>
-        <div class="rule-block"><h3><span>🛡️</span> Safety</h3><ul class="rule-list"><li>Warm up before intense play to prevent injury</li><li>Yield to players on adjacent courts</li><li>Pick up loose shuttles from your court immediately</li><li>Minors under 18 require a signed parental waiver</li><li>Report any injuries to a session coordinator</li></ul></div>
-        <div class="rule-block"><h3><span>📋</span> Check-In</h3><ul class="rule-list"><li>All participants must sign in each session</li><li>Waiver required before first session — no exceptions</li><li>Payment collected at check-in</li><li>Guests must also complete a waiver</li></ul></div>
-        <div class="rule-block"><h3><span>🏫</span> Facility</h3><ul class="rule-list"><li>Respect the school facility — clean up after yourself</li><li>No food or colored drinks on the gym floor</li><li>Water bottles ok — keep them off the court surface</li><li>Stay in designated play areas only</li></ul></div>
+        <div class="rule-block">
+          <h3><span>📋</span> Check-In & Participation</h3>
+          <ul class="rule-list">
+            <li>All participants must complete a waiver before their first session.</li>
+            <li>Players must check in and pay before participating.</li>
+            <li>Players should be willing to assist in setup and teardown of nets and posts.</li>
+            <li>Players should use only the courts designated for their activity level or training group.</li>
+            <li>Players should help keep games moving efficiently and avoid unnecessary delays between matches.</li>
+          </ul>
+        </div>
+
+        <div class="rule-block">
+          <h3><span>🤝</span> Conduct</h3>
+          <ul class="rule-list">
+            <li>Treat all players, coaches, and participants with respect.</li>
+            <li>Demonstrate good sportsmanship both on and off the court.</li>
+            <li>Help keep the facility clean and dispose of trash appropriately.</li>
+            <li>Harassment, bullying, abusive language, excessive arguing, or disruptive behavior will not be tolerated.</li>
+            <li>Help create a positive and welcoming environment for players of all skill levels.</li>
+            <li>Intentional damage to equipment or facilities may result in removal from the program and financial responsibility for damages.</li>
+          </ul>
+        </div>
+
+        <div class="rule-block">
+          <h3><span>🔄</span> Court Rotation</h3>
+          <ul class="rule-list">
+            <li>During busy sessions, groups should rotate off after one completed match: best of 3 games to 21 points.</li>
+            <li>Players waiting for courts should follow the designated queue or rotation system.</li>
+            <li>Courts may be designated by skill level, challenge format, training use, or recreational play.</li>
+            <li>Training courts are reserved for participants enrolled in coaching sessions.</li>
+            <li>Players may not reserve courts for absent participants.</li>
+            <li>Staff may adjust court assignments or rotation procedures as needed to ensure fair court usage.</li>
+          </ul>
+        </div>
       </div>
+
       <div class="waiver-cta">
-        <svg width="44" height="38" viewBox="0 0 260 220" fill="none" style="margin-bottom:16px">
-          <polygon points="0,0 35,0 95,150 70,150" fill="white" opacity="0.7"/>
-          <polygon points="165,0 200,0 260,150 235,150" fill="white" opacity="0.7"/>
-          <polygon points="195,0 260,0 260,150 235,150" fill="white" opacity="0.7"/>
-          <polygon points="70,0 100,0 130,80 160,0 190,0 130,125 70,0" fill="#2b6fd4"/>
-          <path d="M90 150 Q130 195 170 150 L155 150 Q130 178 105 150 Z" fill="white" opacity="0.7"/>
-        </svg>
+        <img src="west_metro_badminton_logo_only.svg" alt="" style="width: 150px; height: auto; margin-bottom:16px; opacity:0.7; object-fit: cover; object-position: center;">
         <h3>Complete Your Liability Waiver</h3>
-        <p>All participants — including minors with parental signature — must complete a waiver before playing. Digital preferred, paper available at the door.</p>
-        <a class="btn btn-blue" href="#">Complete Waiver Online →</a>
-        <div style="margin-top:14px;font-size:12px;color:rgba(255,255,255,0.3);font-weight:600;letter-spacing:0.06em;text-transform:uppercase;">Paper waivers available at session check-in</div>
+        <p>All participants — including minors with parental signature — must complete a waiver before playing.</p>
+        <a class="btn btn-blue" href="https://docs.google.com/forms/d/e/1FAIpQLSf6xaKjRyk8Da3YhDllU22NmLQbZK48ecd2M45_jLRS8Sna3A/viewform?usp=dialog" target="blank">Complete Waiver Online →</a>
+      </div>
       </div>
     </div>
   </section>
@@ -641,12 +745,13 @@
       <p class="section-body">Everything you need to know before your first visit — or your hundredth.</p>
       <div class="faq-list">
         <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">I've never played badminton. Is this for me?<span class="faq-arrow">▾</span></div><div class="faq-a">Absolutely. We welcome true beginners and actively encourage newcomers. Open gym is relaxed and social — experienced players are happy to help first-timers learn. Want a more structured intro? Let us know when you arrive.</div></div>
-        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Do I need to bring my own racket?<span class="faq-arrow">▾</span></div><div class="faq-a">Loaner rackets are available for players trying the sport for the first time. If you plan to attend regularly, we recommend investing in your own racket for comfort. We're happy to suggest options at any price point.</div></div>
-        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Who provides shuttlecocks? Can I bring my own?<span class="faq-arrow">▾</span></div><div class="faq-a">Shuttlecocks are provided at all sessions as part of your session fee. The type (feather or nylon) may vary by session. You're welcome to bring your own — just check with the coordinator about which type is being used that day.</div></div>
-        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What's the difference between open gym and training?<span class="faq-arrow">▾</span></div><div class="faq-a">Open gym is casual drop-in play with a court rotation system — think pickup basketball but badminton. Training is structured coaching with drills, technique work, and coach feedback on dedicated courts. Some sessions offer both simultaneously. Training may have a separate fee.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Do I need to bring my own racket?<span class="faq-arrow">▾</span></div><div class="faq-a">Yes — players must bring their own racket. Rackets are not provided. If you're just getting started, entry-level rackets are widely available at sporting goods stores and online for a reasonable price. We're happy to offer recommendations.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Do I need to bring my own shuttlecocks?<span class="faq-arrow">▾</span></div><div class="faq-a">Yes — players must bring their own shuttlecocks. Shuttles are not provided at open gym sessions. Check with your group on which type (feather or nylon) to bring before your first session.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What's the difference between open gym and training?<span class="faq-arrow">▾</span></div><div class="faq-a">Open gym is casual drop-in play using a group rotation format on shared courts. Training is a structured, coach-led session (~1 hour) on dedicated courts covering drills, footwork, strategy, and supervised play with feedback. Training pricing depends on how many players attend that session: $30/person for under 5, $25 for 5–10, and $20 for 10+. Payment is collected at the end of the training session. Players who join training can also participate in open gym the same day at no extra charge.</div></div>
         <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Can players under 18 participate?<span class="faq-arrow">▾</span></div><div class="faq-a">Yes. Youth players are welcome. Players under 18 require a parental or guardian signature on the liability waiver before participating. A parent does not need to stay during the session, but must complete the waiver. Youth-specific training is offered when demand warrants it.</div></div>
         <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Is West Metro Badminton affiliated with Wayzata High School?<span class="faq-arrow">▾</span></div><div class="faq-a">No. West Metro Badminton is an independently organized community program. We rent gym space at Wayzata High School but have no affiliation with the school's athletics department, staff, or administration. We are a separate, privately run community initiative.</div></div>
         <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What shoes do I need?<span class="faq-arrow">▾</span></div><div class="faq-a">Non-marking athletic court shoes are required — lighter-colored rubber soles that don't scuff gym floors. Most running shoes or cross-trainers work fine. Outdoor shoes, cleats, or dark-soled shoes are not permitted. This rule is strictly enforced to protect the school's gym floor.</div></div>
+        <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Where do I enter the building?<span class="faq-arrow">▾</span></div><div class="faq-a">Enter through the Athletics Entrance at the back of Wayzata High School. Once inside, go right, walk through the cafeteria, take the door on the left, continue past the weight room, and Gyms 7 &amp; 8 will be on your right. Follow posted signs for Gyms 7 &amp; 8 once inside.</div></div>
         <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How do I find out about cancellations or schedule changes?<span class="faq-arrow">▾</span></div><div class="faq-a">The live Google Calendar on the Schedule page is always the most current source. You can also add it directly to your own Google Calendar using the "Add to Google Calendar" button on the Schedule page. We also post updates on social media.</div></div>
         <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Can I come just to watch without playing?<span class="faq-arrow">▾</span></div><div class="faq-a">Of course — come check it out! Non-players are welcome to observe from the sidelines. If you decide to join mid-session, just let the coordinator know. No obligation to play if you want to watch first.</div></div>
       </div>
@@ -665,7 +770,7 @@
         <div class="contact-card"><div class="contact-icon">✉️</div><h3>Email</h3><p>Best for program questions, waiver issues, or training inquiries.</p><a class="contact-link" href="mailto:info@westmetrobadminton.com">info@westmetrobadminton.com</a></div>
         <div class="contact-card"><div class="contact-icon">📱</div><h3>Social Media</h3><p>Follow us for session updates, cancellations, photos, and announcements.</p><a class="contact-link" href="#">@WestMetroBadminton</a></div>
         <div class="contact-card"><div class="contact-icon">💬</div><h3>Group Chat</h3><p>Join our community group chat for real-time session updates and player discussion.</p><a class="contact-link" href="#">Request Group Invite</a></div>
-        <div class="contact-card"><div class="contact-icon">📍</div><h3>Location</h3><p>Wayzata High School gymnasium, Plymouth, MN. Entrance details via group chat.</p><a class="contact-link" href="#">Get Directions</a></div>
+        <div class="contact-card"><div class="contact-icon">📍</div><h3>Location</h3><p>Wayzata High School — Gyms 7 &amp; 8. Enter through the Athletics Entrance in the back of the school and follow signs to the gyms.</p><a class="contact-link" href="#" onclick="showPage('schedule')">View Arrival Guide</a></div>
       </div>
       <div class="update-box">
         <h3>Stay in the Loop 📬</h3>
@@ -690,20 +795,12 @@
     <div class="footer-top">
       <div class="footer-brand">
         <div class="footer-wm">
-          <svg width="44" height="38" viewBox="0 0 260 220" fill="none">
-            <polygon points="0,0 35,0 95,150 70,150" fill="white" opacity="0.8"/>
-            <polygon points="165,0 200,0 260,150 235,150" fill="white" opacity="0.8"/>
-            <polygon points="195,0 260,0 260,150 235,150" fill="white" opacity="0.8"/>
-            <polygon points="70,0 100,0 130,80 160,0 190,0 130,125 70,0" fill="#2b6fd4"/>
-            <path d="M90 150 Q130 195 170 150 L155 150 Q130 178 105 150 Z" fill="white" opacity="0.8"/>
-          </svg>
+          <img src="west_metro_badminton_logo_horizontal.svg" alt="West Metro Badminton" style="height: 50px; width: auto; opacity: 0.8; object-fit: cover; object-position: center;">
         </div>
-        <div class="footer-brand-name">West Metro</div>
-        <div class="footer-brand-sub">Badminton</div>
         <p>An independently organized community badminton program in the west metro area of Minnesota. All levels welcome.</p>
       </div>
-      <div class="footer-links"><h4>Program</h4><ul><li><a onclick="showPage('opengym')">Open Gym</a></li><li><a onclick="showPage('training')">Training</a></li><li><a onclick="showPage('schedule')">Schedule</a></li></ul></div>
-      <div class="footer-links"><h4>Info</h4><ul><li><a onclick="showPage('rules')">Rules & Waiver</a></li><li><a onclick="showPage('faq')">FAQ</a></li><li><a onclick="showPage('contact')">Contact</a></li></ul></div>
+      <div class="footer-links"><h4>Program</h4><ul><li><a onclick="showPage('about')">About Us</a></li><li><a onclick="showPage('opengym')">Open Gym</a></li><li><a onclick="showPage('training')">Training</a></li></ul></div>
+      <div class="footer-links"><h4>Info</h4><ul><li><a onclick="showPage('schedule')">Schedule</a></li><li><a onclick="showPage('rules')">Rules & Waiver</a></li><li><a onclick="showPage('faq')">FAQ</a></li><li><a onclick="showPage('contact')">Contact</a></li></ul></div>
     </div>
     <div class="footer-bottom">
       <div>© 2025 West Metro Badminton. Community program.</div>
