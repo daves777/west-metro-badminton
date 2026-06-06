@@ -192,7 +192,7 @@
   }
 
   /* ─── LOCATION GUIDE ─── */
-  .location-guide { margin-top: 28px; display: grid; gap: 18px; grid-template-columns: 1.05fr 1fr; align-items: stretch; }
+  .location-guide { margin-top: 30px; display: grid; gap: 18px; grid-template-columns: 1.05fr 1fr; grid-auto-rows: 1fr; align-items: stretch; }
   .location-card { background: var(--white); border: 1.5px solid var(--gray-100); border-radius: 14px; padding: 28px; box-shadow: 0 4px 22px rgba(0,0,0,0.04); }
   .location-card h3 { font-size: 14px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); margin-bottom: 12px; display:flex; align-items:center; gap:8px; }
   .location-card p { font-size: 14px; color: var(--gray-500); line-height: 1.75; font-weight: 500; margin-bottom: 14px; }
@@ -263,6 +263,10 @@
   .footer-links a:hover { color: var(--white); }
   .footer-bottom { border-top: 1px solid rgba(255,255,255,0.07); padding-top: 24px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; font-size: 12px; font-weight: 500; }
   .footer-disc { color: rgba(255,255,255,0.22); font-size: 11px; }
+
+  /* Arrival guide image */
+  .arrival-image { max-width: 920px; margin: 22px auto; text-align: center; }
+  .arrival-image img { width: 100%; height: auto; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.12); }
 
   /* ─── RESPONSIVE ─── */
   @media (max-width: 780px) {
@@ -351,8 +355,9 @@
       <p class="hero-desc">Drop-in open play and structured coaching for all skill levels — from first-timers to competitive players. Show up, rally, improve, repeat.</p>
       <div class="hero-btns">
         <a class="btn btn-blue" href="#" onclick="showPage('schedule')">View Schedule</a>
-        <a class="btn btn-white-outline" href="#" onclick="showPage('rules')">Complete Waiver</a>
         <a class="btn btn-white-outline" href="#" onclick="showPage('about')">About Us</a>
+        <a class="btn btn-white-outline" href="#arrival-guide" onclick="showPage('schedule'); setTimeout(function() { var el = document.getElementById('arrival-guide'); var offsetTop = el.offsetTop - 120; window.scrollTo({top: offsetTop, behavior: 'smooth'}); }, 100);">Arrival Guide</a>
+        <a class="btn btn-white-outline" href="#" onclick="showPage('rules')">Complete Waiver</a>
       </div>
       <div class="hero-rule"></div>
       <div class="hero-stats">
@@ -419,7 +424,7 @@
             <img src="west_metro_badminton_logo_only.svg" alt="" style="width: 150px; height: auto; margin-bottom:18px; opacity:0.9; object-fit: cover; object-position: center;">
             <h3>Play Your Way</h3>
             <p>Open gym and training run simultaneously in the same space — flex between casual play and structured improvement any session, any week.</p>
-          </div>
+        </div>
         </div>
       </div>
     </div>
@@ -488,24 +493,21 @@
       <div class="location-guide" id="arrival-guide">
         <div class="location-card">
           <h3><span>📍</span> Location &amp; Arrival Guide</h3>
-          <p><strong style="color:var(--ink);">Wayzata High School — Gyms 7 &amp; 8</strong><br>Plymouth, Minnesota</p>
+          <br>
+          <p><strong style="color:var(--ink);">Wayzata High School — Gyms 7 &amp; 8</strong><br>4955 Peony Ln N, Plymouth, MN 55446</p>
           <p>Please enter through the <strong style="color:var(--ink);">Athletics Entrance</strong> located at the back of the school.</p>
-          <div class="location-meta">
-            <div><strong>Entrance</strong>Athletics Entrance at the back of Wayzata High School</div>
-            <div><strong>Destination</strong>Gyms 7 &amp; 8</div>
-            <div><strong>Tip</strong>Follow posted signs for Gyms 7 &amp; 8 once inside.</div>
-          </div>
-        </div>
-        <div class="location-card">
-          <h3><span>➡️</span> Walking Directions</h3>
+          <br>
+          <p><strong style="color:var(--ink);">➡️ Walking Directions</strong></p>
           <ol class="arrival-steps">
-            <li>Enter through the Athletics Entrance in the back of the school.</li>
             <li>Once inside, go right.</li>
             <li>Walk through the cafeteria.</li>
             <li>Take the door on the left.</li>
             <li>Continue past the weight room.</li>
             <li>Gyms 7 &amp; 8 will be on your right.</li>
           </ol>
+        </div>
+        <div class="arrival-image">
+          <img src="West Metro Badminton Arrival Guide.png" alt="Arrival guide map to Wayzata High School — Gyms 7 &amp; 8">
         </div>
       </div>
 
